@@ -3,6 +3,7 @@ import { Plus } from 'phosphor-react';
 import NewTaskHeader from './NewTaskHeader';
 import NewTaskBox from './NewTaskBox';
 import { FormEvent, useEffect, useState } from 'react';
+import NotHaveTaskImg from '../assets/imgs/Clipboard.png';
 
 const AddNewTaskContainer = styled.div`
   padding: 0 20px;
@@ -136,6 +137,42 @@ const Teste = styled.div`
   position: relative;
 `;
 
+const NotHaveTaskBox = styled.div`
+  margin-top: 40px;
+  max-width: 100%;
+  border-top: 1px solid #333333;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  place-items: center;
+`;
+
+interface TextBold {
+  isBold: boolean;
+}
+
+const NotHaveTaskContent = styled.div`
+  margin-top: 1rem;
+
+  p + p {
+    margin-top: 0.4rem;
+  }
+`;
+
+const NotHaveTaskImgBox = styled.div`
+  margin-top: 40px;
+`;
+
+const NotHaveTaskText = styled.p`
+  font-family: var(--family-text);
+  font-size: 1rem;
+  line-height: 1.4;
+  text-align: center;
+  color: #808080;
+  font-weight: ${(p: TextBold) => (p.isBold ? '700' : '400')};
+`;
+
 function addNewTask() {
   const [newTask, setNewTask] = useState([] as any);
   const [task, setTask] = useState('');
@@ -231,6 +268,21 @@ function addNewTask() {
         {alertOfLimite && <AlertLimitTask>{alertOfLimite}</AlertLimitTask>}
       </FormTask>
       <NewTaskHeader createdTask={createdTask} />
+      {newTask.length <= 0 && (
+        <NotHaveTaskBox>
+          <NotHaveTaskImgBox>
+            <img src={NotHaveTaskImg} />
+          </NotHaveTaskImgBox>
+          <NotHaveTaskContent>
+            <NotHaveTaskText isBold={true}>
+              Você ainda não tem tarefas cadastradas
+            </NotHaveTaskText>
+            <NotHaveTaskText isBold={false}>
+              Crie tarefas e organize seus itens a fazer
+            </NotHaveTaskText>
+          </NotHaveTaskContent>
+        </NotHaveTaskBox>
+      )}
       <Teste>
         {newTask.length > 0 &&
           newTask.map((task: string, index: number) => {
