@@ -71,9 +71,32 @@ const BorderIconAdd = styled.div`
 `;
 
 const ButtonCleanTasks = styled.button`
-  padding: 1rem;
+  display: block;
+  font-family: var(--family-text);
+  font-weight: bold;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #f2f2f2;
+  background-color: #1e6f9f;
+  border-radius: 8px;
+  padding: 16px;
+  border: none;
   cursor: pointer;
-  font-size: 1rem;
+  transition: 0.3s;
+  width: 120px;
+  position: absolute;
+  bottom: -100px;
+  right: 415px;
+
+  :hover,
+  :focus {
+    box-shadow: 0 0 0 4px #1e6f9f;
+    outline: none;
+  }
+`;
+
+const AddNewTaskContainer = styled.div`
+  position: relative;
 `;
 function addNewTask() {
   const [newTask, setNewTask] = useState([] as any);
@@ -105,6 +128,17 @@ function addNewTask() {
     });
 
     setNewTask(newTasksAfterDelete);
+
+    const getDataInLocalStorage = localStorage.getItem('userSaveTasks');
+    if (getDataInLocalStorage !== null) {
+      const cleanData = JSON.parse(getDataInLocalStorage);
+      const newTask = cleanData.newTask.filter((item: string) => {
+        return item !== task;
+      });
+
+      const newSaveTask = JSON.stringify({ newTask });
+      localStorage.setItem('userSaveTasks', newSaveTask);
+    }
   }
 
   function handleCompleteTask(task: string) {
@@ -144,7 +178,7 @@ function addNewTask() {
   }, []);
 
   return (
-    <>
+    <AddNewTaskContainer>
       {alertOfLimite && <p>{alertOfLimite}</p>}
 
       <FormTask onSubmit={handleNewTask}>
@@ -176,10 +210,12 @@ function addNewTask() {
             />
           );
         })}
-      <ButtonCleanTasks onClick={handleCleanLocalStorage}>
-        Zerar
-      </ButtonCleanTasks>
-    </>
+      {newTask.length > 0 && (
+        <ButtonCleanTasks onClick={handleCleanLocalStorage}>
+          Zerar
+        </ButtonCleanTasks>
+      )}
+    </AddNewTaskContainer>
   );
 }
 
