@@ -1,8 +1,13 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Plus } from 'phosphor-react';
 import NewTaskHeader from './NewTaskHeader';
 import NewTaskBox from './NewTaskBox';
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+
+const AddNewTaskContainer = styled.div`
+  padding: 0 20px;
+  width: 100%;
+`;
 
 const FormTask = styled.form`
   display: flex;
@@ -13,6 +18,7 @@ const FormTask = styled.form`
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 64px;
+  position: relative;
 `;
 
 const FormTaskInputText = styled.input`
@@ -85,8 +91,7 @@ const ButtonCleanTasks = styled.button`
   transition: 0.3s;
   width: 120px;
   position: absolute;
-  bottom: -100px;
-  right: 415px;
+  right: 0;
 
   :hover,
   :focus {
@@ -95,28 +100,60 @@ const ButtonCleanTasks = styled.button`
   }
 `;
 
-const AddNewTaskContainer = styled.div`
+const animeLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translate3d(-40px,0,0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
+`;
+
+const AlertLimitTask = styled.p`
+  font-size: 12px;
+  font-family: var(--family-text);
+  line-height: 1.5;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.015rem;
+  background-color: #1e6f9f;
+  max-width: max-content;
+  padding: 0.2rem;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 9999;
+  top: -40px;
+  animation: ${animeLeft} 0.4s forwards;
+`;
+
+const Teste = styled.div`
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
   position: relative;
 `;
+
 function addNewTask() {
   const [newTask, setNewTask] = useState([] as any);
   const [task, setTask] = useState('');
   const [createdTask, setCreatedTask] = useState(0);
-  const [completeTask, setCompleteTask] = useState([] as any);
   const [alertOfLimite, setAlertOfLimite] = useState('');
 
   // method that add the task in the array of tasks
   function handleNewTask(event: FormEvent) {
     event.preventDefault();
     if (task) {
-      if (newTask.length < 5) {
+      if (newTask.length < 3) {
         setNewTask([...newTask, task]);
         setTask('');
-        console.log(newTask);
       } else {
-        setAlertOfLimite(
-          'Limite de tarefas atingidas, termine suas tarefas para criar ou novas, ou remova alguma tarefa para adicionar uma nova'
-        );
+        setAlertOfLimite('Ops!! Limite de tasks atingido');
+        setTimeout(() => {
+          setAlertOfLimite('');
+        }, 2000);
       }
     }
   }
@@ -126,9 +163,9 @@ function addNewTask() {
     const newTasksAfterDelete = newTask.filter((item: string) => {
       return item !== task;
     });
-
     setNewTask(newTasksAfterDelete);
 
+    // removendo do localStorage
     const getDataInLocalStorage = localStorage.getItem('userSaveTasks');
     if (getDataInLocalStorage !== null) {
       const cleanData = JSON.parse(getDataInLocalStorage);
@@ -139,10 +176,6 @@ function addNewTask() {
       const newSaveTask = JSON.stringify({ newTask });
       localStorage.setItem('userSaveTasks', newSaveTask);
     }
-  }
-
-  function handleCompleteTask(task: string) {
-    setCompleteTask([...completeTask, task]);
   }
 
   // clean the data save
@@ -179,8 +212,6 @@ function addNewTask() {
 
   return (
     <AddNewTaskContainer>
-      {alertOfLimite && <p>{alertOfLimite}</p>}
-
       <FormTask onSubmit={handleNewTask}>
         <FormTaskInputText
           placeholder="Adicione uma nova tarefa"
@@ -197,24 +228,26 @@ function addNewTask() {
             <Plus color="#f2f2f2" width={12} height={12} />
           </BorderIconAdd>
         </FormTaskButtonSubmit>
+        {alertOfLimite && <AlertLimitTask>{alertOfLimite}</AlertLimitTask>}
       </FormTask>
       <NewTaskHeader createdTask={createdTask} />
-      {newTask.length > 0 &&
-        newTask.map((task: string, index: number) => {
-          return (
-            <NewTaskBox
-              task={task}
-              key={index}
-              handleDeleteTask={handleDeleteTask}
-              handleCompleteTask={handleCompleteTask}
-            />
-          );
-        })}
-      {newTask.length > 0 && (
-        <ButtonCleanTasks onClick={handleCleanLocalStorage}>
-          Zerar
-        </ButtonCleanTasks>
-      )}
+      <Teste>
+        {newTask.length > 0 &&
+          newTask.map((task: string, index: number) => {
+            return (
+              <NewTaskBox
+                task={task}
+                key={index}
+                handleDeleteTask={handleDeleteTask}
+              />
+            );
+          })}
+        {newTask.length > 0 && (
+          <ButtonCleanTasks onClick={handleCleanLocalStorage}>
+            Zerar
+          </ButtonCleanTasks>
+        )}
+      </Teste>
     </AddNewTaskContainer>
   );
 }

@@ -1,13 +1,15 @@
-import React from 'react';
+import styled from 'styled-components';
 import TheHeader from './TheHeader';
 import AddNewTask from './AddNewTask';
 
+const HomeBox = styled.div``;
+
 function Home() {
   return (
-    <div>
+    <HomeBox>
       <TheHeader />
       <AddNewTask />
-    </div>
+    </HomeBox>
   );
 }
 

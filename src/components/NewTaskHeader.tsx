@@ -58,6 +58,19 @@ interface headerProps {
   createdTask: number;
 }
 
+// quando for colocar as tarefas concluidas
+// <TaskFinishedText>
+//Concluídas
+//<TaskCreatedFoolbackCount
+//  width="max-content"
+//  height="auto"
+//  radius="8px"
+//  padding="4px"
+//>
+// 2 de 5
+//</TaskCreatedFoolbackCount>
+//</TaskFinishedText>
+
 function NewTask({ createdTask }: headerProps) {
   return (
     <NewTasHeaderkContainer>
@@ -68,17 +81,6 @@ function NewTask({ createdTask }: headerProps) {
             {createdTask}
           </TaskCreatedFoolbackCount>
         </TaskCreatedFollback>
-        <TaskFinishedText>
-          Concluídas
-          <TaskCreatedFoolbackCount
-            width="max-content"
-            height="auto"
-            radius="8px"
-            padding="4px"
-          >
-            2 de 5
-          </TaskCreatedFoolbackCount>
-        </TaskFinishedText>
       </HeaderNewTask>
     </NewTasHeaderkContainer>
   );

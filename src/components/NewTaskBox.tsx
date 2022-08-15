@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Trash } from 'phosphor-react';
+import { Trash, CheckCircle, Circle } from 'phosphor-react';
+import { useState } from 'react';
 
 const NewTaskBoxContainer = styled.div`
   background: #262626;
@@ -7,39 +8,56 @@ const NewTaskBoxContainer = styled.div`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
   border-radius: 8px;
   padding: 16px;
-  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  display: flex;
   gap: 8px;
   margin-bottom: 1.25rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: center;
 `;
 
-const NewTaskCircle = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #4ea8de;
-`;
+interface TaskFinish {
+  check: boolean;
+}
 
 const NewTaskContent = styled.p`
   font-family: var(--family-text);
   font-size: 0.875rem;
   line-height: 1.4;
   color: #f2f2f2;
+  text-decoration: ${(p: TaskFinish) => (p.check ? 'line-through' : 'none')};
 `;
 
-interface taskProps {
+interface TaskProps {
   task: string;
   handleDeleteTask: (taskToDelete: string) => void;
-  handleCompleteTask: (taskComplete: string) => void;
 }
 
-function NewTaskBox({ task, handleDeleteTask, handleCompleteTask }: taskProps) {
+function NewTaskBox({ task, handleDeleteTask }: TaskProps) {
+  const [checkFinish, setCheckFinish] = useState(false);
+
   return (
     <NewTaskBoxContainer>
-      <NewTaskCircle onClick={() => handleCompleteTask(task)} />
-      <NewTaskContent>{task}</NewTaskContent>
+      {checkFinish ? (
+        <CheckCircle
+          width={24}
+          height={24}
+          color="#4ea8de"
+          cursor="pointer"
+          onClick={() => setCheckFinish(false)}
+        />
+      ) : (
+        <Circle
+          width={24}
+          height={24}
+          color="#4ea8de"
+          cursor="pointer"
+          onClick={() => setCheckFinish(true)}
+        />
+      )}
+      <NewTaskContent check={checkFinish}>{task}</NewTaskContent>
       <div onClick={() => handleDeleteTask(task)}>
         <Trash width={24} height={24} color="#808080" cursor="pointer" />
       </div>
