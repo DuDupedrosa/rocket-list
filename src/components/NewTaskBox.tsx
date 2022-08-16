@@ -50,6 +50,7 @@ function NewTaskBox({ task, handleDeleteTask }: TaskProps) {
         />
       ) : (
         <Circle
+          data-test="NewTaskBox:ButtonCompleteTask"
           width={24}
           height={24}
           color="#4ea8de"
@@ -58,7 +59,10 @@ function NewTaskBox({ task, handleDeleteTask }: TaskProps) {
         />
       )}
       <NewTaskContent check={checkFinish}>{task}</NewTaskContent>
-      <div onClick={() => handleDeleteTask(task)}>
+      <div
+        data-test="NewTaskBox:ButtonDeleteTask"
+        onClick={() => handleDeleteTask(task)}
+      >
         <Trash width={24} height={24} color="#808080" cursor="pointer" />
       </div>
     </NewTaskBoxContainer>

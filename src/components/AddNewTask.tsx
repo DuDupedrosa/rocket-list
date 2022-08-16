@@ -251,6 +251,7 @@ function addNewTask() {
     <AddNewTaskContainer>
       <FormTask onSubmit={handleNewTask}>
         <FormTaskInputText
+          data-test="AddNewTask:InputCreateTask"
           placeholder="Adicione uma nova tarefa"
           type="text"
           required
@@ -259,7 +260,7 @@ function addNewTask() {
           onChange={({ target }) => setTask(target.value)}
           value={task}
         />
-        <FormTaskButtonSubmit>
+        <FormTaskButtonSubmit data-test="AddNewTask:ButtonCreateTask">
           Criar
           <BorderIconAdd>
             <Plus color="#f2f2f2" width={12} height={12} />
