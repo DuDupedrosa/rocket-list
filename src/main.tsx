@@ -5,13 +5,20 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`  
 :root {
+  --mainBlue: #1E6F9F;
   --gray-700: #0D0D0D;
+  --gray-600: #1A1A1A;
   --gray-500: #262626;
+  --gray-400: #4D4D4D;
   --gray-300: #808080;
-  --gray-100:#F2F2F2:
-  --blue-dark: #1E6F9F;
+  --gray-200: #B3B3B3;
+  --gray-100:#E6E6E6;
+
+  --red-600:#dc2626;
+  --red-400: #f87171;
+  --light: #ffffff;
   --backgroundMain: #1A1A1A;
-  --family-text: 'Inter', sans-serif;
+  --family-text: 'Roboto', sans-serif;
 }
 
 * {
