@@ -4,14 +4,27 @@ import { alertTypeEnum } from '../../helpers/enums/alertEnum';
 import { CheckCircle, Warning, XCircle } from 'phosphor-react';
 import { fadeInLeft } from '../../style/styled-components/Animation';
 
+interface ContentStylesTypes {
+  svgColor?: string;
+  textColor?: string;
+}
+
+interface ContainerStylesTypes {
+  bg: string;
+  outline?: boolean;
+}
+
 const Container = styled.div`
   position: relative;
   width: 100%;
   padding: 20px;
   padding-right: 32px;
   border-radius: 8px;
-  background-color: ${({ bg }: { bg: string }) => bg};
+  background-color: ${({ bg, outline }: ContainerStylesTypes) =>
+    outline ? 'transparent' : bg};
   animation: ${fadeInLeft} 0.4s forwards;
+  border: ${({ outline, bg }: ContainerStylesTypes) =>
+    outline ? `1px solid ${bg}` : 'none'};
 `;
 
 const Content = styled.div`
@@ -19,16 +32,17 @@ const Content = styled.div`
   grid-template-columns: 20px 1fr;
   align-items: center;
   gap: 16px;
-
   svg {
-    color: var(--light);
+    color: ${({ svgColor }: ContentStylesTypes) =>
+      svgColor ? svgColor : 'var(--light)'};
     width: 20px;
     height: 20px;
   }
 
   p {
     font-size: 16px;
-    color: var(--light);
+    color: ${({ textColor }: ContentStylesTypes) =>
+      textColor ? textColor : 'var(--light)'};
     font-weight: normal;
     line-height: 1.5;
   }
@@ -52,6 +66,7 @@ function AlertComponent({
   type,
   message,
   onClose,
+  outline,
 }: {
   type:
     | typeof alertTypeEnum.SUCCESS
@@ -59,6 +74,9 @@ function AlertComponent({
     | typeof alertTypeEnum.INFO
     | typeof alertTypeEnum.WARNING;
   message: string;
+  outline?: boolean;
+  svgColor?: string;
+  textColor?: string;
   onClose?: () => void;
 }) {
   const [alertBg, setAlertBg] = useState<string>('');
@@ -66,7 +84,7 @@ function AlertComponent({
   function alertBgByType() {
     const literal = {
       [alertTypeEnum.SUCCESS]: '#16a34a',
-      [alertTypeEnum.ERRO]: '#dc2626',
+      [alertTypeEnum.ERRO]: outline ? '#f87171' : '#dc2626',
       [alertTypeEnum.WARNING]: '#ca8a04',
       [alertTypeEnum.INFO]: '#2563eb',
     };
@@ -79,8 +97,11 @@ function AlertComponent({
   }, [type]);
 
   return (
-    <Container bg={alertBg}>
-      <Content>
+    <Container bg={alertBg} outline={outline}>
+      <Content
+        svgColor={outline ? alertBg : undefined}
+        textColor={outline ? alertBg : undefined}
+      >
         {type === alertTypeEnum.ERRO && <Warning size={20} />}
         {type === alertTypeEnum.SUCCESS && <CheckCircle size={20} />}
         {type === alertTypeEnum.INFO && <CheckCircle size={20} />}

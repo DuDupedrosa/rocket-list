@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 const GlobalStyles = createGlobalStyle`  
 :root {
   --mainBlue: #1E6F9F;
+
   --gray-700: #0D0D0D;
   --gray-600: #1A1A1A;
   --gray-500: #262626;
@@ -17,8 +18,17 @@ const GlobalStyles = createGlobalStyle`
 
   --red-600:#dc2626;
   --red-400: #f87171;
+
+  --green-600: #16a34a;
+
+  --yellow-600: #ca8a04;
+
+  --blue-600: #2563eb;
+
   --light: #ffffff;
+
   --backgroundMain: #1A1A1A;
+  
   --family-text: 'Roboto', sans-serif;
 }
 

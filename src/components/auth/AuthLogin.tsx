@@ -111,7 +111,7 @@ function AuthLogin() {
                       Senha
                     </styledAuth.Label>
 
-                    <styled.PasswordInputContainer>
+                    <styledAuth.PasswordInputContainer>
                       <styledAuth.Input
                         isPassword={true}
                         placeholder="********"
@@ -119,7 +119,7 @@ function AuthLogin() {
                         type={showPassword ? 'text' : 'password'}
                         {...register('password', { required: true })}
                       />
-                      <styled.IconEyePasswordContainer>
+                      <styledAuth.IconEyePasswordContainer>
                         {showPassword ? (
                           <EyeSlash
                             size={24}
@@ -131,8 +131,8 @@ function AuthLogin() {
                             onClick={() => setShowPassword(true)}
                           />
                         )}
-                      </styled.IconEyePasswordContainer>
-                    </styled.PasswordInputContainer>
+                      </styledAuth.IconEyePasswordContainer>
+                    </styledAuth.PasswordInputContainer>
 
                     {errors.password && <RequiredInputMessage />}
                     <styled.ResetPasswordLink>

@@ -24,11 +24,11 @@ const Message = styled.span`
   animation: ${AnimeLeft} 0.6s forwards;
 `;
 
-function RequiredInputMessage() {
+function RequiredInputMessage({ customMessage }: { customMessage?: string }) {
   return (
     <Message>
       <Warning size={18} />
-      Esse campo é obrigatório
+      {customMessage ? customMessage : 'Esse campo é obrigatório'}
     </Message>
   );
 }
