@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
+import { Toaster } from 'sonner';
 
 const GlobalStyles = createGlobalStyle`  
 :root {
@@ -51,6 +52,12 @@ display: inline-block;
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <GlobalStyles />
+    <Toaster
+      richColors
+      toastOptions={{
+        style: { minHeight: '50px', paddingLeft: '20px', paddingRight: '20px' },
+      }}
+    />
     <App />
   </React.StrictMode>
 );

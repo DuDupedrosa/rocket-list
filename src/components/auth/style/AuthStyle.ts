@@ -100,9 +100,11 @@ export const Input = styled.input`
   border-radius: 8px;
   width: 100%;
   padding-left: 8px;
-  padding-right: 8px;
   height: 44px;
   transition: 0.3s;
+  padding-right: ${({ isPassword }: { isPassword?: boolean }) => ({
+    paddingRight: isPassword ? '52px' : '8px',
+  })};
 
   :focus {
     outline: none;
