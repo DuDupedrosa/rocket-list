@@ -9,6 +9,9 @@
     "preview": "vite preview",
     "open": "cypress open"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/hoist-non-react-statics": "^3.3.1",
