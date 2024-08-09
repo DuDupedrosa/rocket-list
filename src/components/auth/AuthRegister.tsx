@@ -14,13 +14,21 @@ import AlertComponent from '../ui/AlertComponent';
 import { alertTypeEnum } from '../../helpers/enums/alertEnum';
 import ValidateStrengthPassword from '../ValidateStrengthPassword';
 import * as styled from './style/AuthRegisterStyle';
-import { passwordCheckListData } from '../../helpers/data/passwordCheckListData';
+import {
+  erroPasswordByEnum,
+  passwordCheckListData,
+} from '../../helpers/data/passwordCheckListData';
+import { AxiosError } from 'axios';
+import http from '../../api/http';
+import { errorStatusEnum } from '../../helpers/enums/errorStatusEnum';
+import { alertDataType } from '../../types/alert';
 
 type Inputs = {
   name: string;
   email: string;
   password: string;
 };
+
 function AuthRegister() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -28,6 +36,9 @@ function AuthRegister() {
   const [isValidPassword, setIsValidPassword] = useState<string | true>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
+  const [alert, setAlert] = useState<alertDataType | null>(null);
+  const [showAlertValidatePassword, setShowAlertValidatePassword] =
+    useState<boolean>(true);
 
   const {
     register,
@@ -36,13 +47,60 @@ function AuthRegister() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (payload) => {
     setLoading(true);
-    if (!isValidEmail || !validateEmail(data.email)) return;
+    setShowAlertValidatePassword(false);
+    setAlert(null);
 
-    if (!isValidPassword || validatePassword(data.password) !== true) return;
+    try {
+      if (!isValidEmail || !validateEmail(payload.email)) return;
 
-    console.log('%c⧭', 'color: #733d00', data);
+      if (!isValidPassword || validatePassword(payload.password) !== true)
+        return;
+
+      const { data } = await http.post('auth/register', { ...payload });
+      const { user, token } = data.content;
+
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+
+      navigate('/');
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        let status: number;
+
+        if (err.response) {
+          status = err.response.status;
+          const { message } = err.response.data;
+
+          if (status === errorStatusEnum.BAD_REQUEST) {
+            if (message === 'email_already_register') {
+              setAlert({
+                message: 'E-mail já foi registrado em nossa plataforma.',
+                show: true,
+              });
+            }
+
+            if (message === 'invalid_email') {
+              setAlert({
+                message: 'Formato de e-mail inválido',
+                show: true,
+              });
+            }
+
+            if (typeof message === 'object') {
+              setAlert({
+                message: `A senha precisa conter: ${
+                  erroPasswordByEnum[message.enum]
+                }`,
+                show: true,
+              });
+            }
+          }
+        }
+      }
+    }
+
     setLoading(false);
   };
 
@@ -57,6 +115,7 @@ function AuthRegister() {
   }
 
   function validatePasswordOnEvent(password: string) {
+    setShowAlertValidatePassword(true);
     const valid: { enum: number; key: string } | boolean =
       validatePassword(password);
 
@@ -111,12 +170,18 @@ function AuthRegister() {
                   <div>
                     <styledAuth.Label htmlFor="email">E-mail</styledAuth.Label>
                     <styledAuth.Input
-                      {...(register('email'), { required: true })}
+                      {...register('email', {
+                        required: true,
+                        onChange: (e) => {
+                          handleChangeEmail(e);
+                        },
+                        onBlur: (e) => {
+                          handleBlurEmail(e);
+                        },
+                      })}
                       placeholder="email@example.com"
                       id="email"
                       type="email"
-                      onBlur={(e) => handleBlurEmail(e)}
-                      onChange={(e) => handleChangeEmail(e)}
                     ></styledAuth.Input>
                     {errors.email && <RequiredInputMessage />}
                     {!isValidEmail && (
@@ -132,12 +197,18 @@ function AuthRegister() {
                     <styledAuth.PasswordInputContainer>
                       <styledAuth.Input
                         isPassword={true}
-                        {...register('password', { required: true })}
+                        {...register('password', {
+                          required: true,
+                          onChange: (e) => {
+                            handleChangePassword(e);
+                          },
+                          onBlur: (e) => {
+                            handleBlurPassword(e);
+                          },
+                        })}
                         placeholder="********"
                         id="password"
                         type={showPassword ? 'text' : 'password'}
-                        onBlur={(e) => handleBlurPassword(e)}
-                        onChange={(e) => handleChangePassword(e)}
                       ></styledAuth.Input>
                       <styledAuth.IconEyePasswordContainer>
                         {showPassword ? (
@@ -160,7 +231,7 @@ function AuthRegister() {
                     )}
                   </div>
 
-                  {password && (
+                  {password && showAlertValidatePassword && (
                     <ValidateStrengthPassword userPassword={password} />
                   )}
 
@@ -174,6 +245,15 @@ function AuthRegister() {
                       );
                     })}
                   </styled.PasswordRulesList>
+
+                  {alert && alert.show && (
+                    <AlertComponent
+                      type={alertTypeEnum.ERRO}
+                      message={alert.message}
+                      size="md"
+                      onClose={() => setAlert(null)}
+                    />
+                  )}
 
                   <div>
                     <ButtonSubmit text="Cadastrar" loading={loading} />

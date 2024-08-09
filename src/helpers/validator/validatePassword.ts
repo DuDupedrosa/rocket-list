@@ -1,29 +1,4 @@
-const erroPasswordData = {
-  HAS_UPPER_CASE: {
-    enum: 1,
-    key: 'Pelo menos 1 caractere maiúsculo',
-  },
-  HAS_LOWER_CASE: {
-    enum: 2,
-    key: 'Pelo menos 1 caractere minúsculo',
-  },
-  HAS_DIGITS: {
-    enum: 3,
-    key: 'Pelo menos 1 número',
-  },
-  HAS_SPECIAL_CHARACTER: {
-    enum: 4,
-    key: 'Pelo menos 1 caractere especial',
-  },
-  HAS_MIN_DIFFERENT_CHAR: {
-    enum: 5,
-    key: 'Pelo menos 6 caracteres diferentes',
-  },
-  HAS_MIN_LENGTH: {
-    enum: 6,
-    key: 'Pelo menos 8 caracteres',
-  },
-};
+import { erroPasswordData } from '../data/passwordCheckListData';
 
 function hasUpperCase(password: string): boolean {
   return /[A-Z]/.test(password);

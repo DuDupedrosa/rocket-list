@@ -1,0 +1,8 @@
+export const passwordErroValidateEnum = {
+  HAS_UPPER_CASE: 1,
+  HAS_LOWER_CASE: 2,
+  HAS_DIGITS: 3,
+  HAS_SPECIAL_CHARACTER: 4,
+  HAS_MIN_DIFFERENT_CHAR: 5,
+  HAS_MIN_LENGTH: 6,
+};
