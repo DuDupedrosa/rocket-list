@@ -136,7 +136,9 @@ function AuthLogin() {
 
                     {errors.password && <RequiredInputMessage />}
                     <styled.ResetPasswordLink>
-                      <span>Esqueceu sua senha?</span>
+                      <span onClick={() => navigate('/auth/reset-password')}>
+                        Esqueceu sua senha?
+                      </span>
                     </styled.ResetPasswordLink>
                   </div>
 
