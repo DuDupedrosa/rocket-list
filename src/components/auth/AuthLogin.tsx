@@ -143,6 +143,7 @@ function AuthLogin() {
                   {/* alert */}
                   {alert && alert.show && (
                     <AlertComponent
+                      size="md"
                       type={alertTypeEnum.ERRO}
                       message={alert.message}
                       onClose={() => setAlert(null)}

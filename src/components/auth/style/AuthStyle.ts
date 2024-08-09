@@ -63,6 +63,9 @@ export const CardFormBg = styled.div`
   padding: 20px;
   border-radius: 8px;
   width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  overflow-y: auto;
 
   @media ${mediaQueries.sm} {
     width: 70%;

@@ -20,7 +20,8 @@ function ValidateStrengthPassword({ userPassword }: { userPassword: string }) {
       [strengthPasswordSteps.default]: {
         alert: {
           type: alertTypeEnum.ERRO,
-          message: 'Sua senha é muita fraca',
+          message:
+            'Sua senha é muito fraca! A segurança da sua senha está abaixo do recomendado.',
         },
         progress: {
           width: '25%',
@@ -30,7 +31,8 @@ function ValidateStrengthPassword({ userPassword }: { userPassword: string }) {
       [strengthPasswordSteps.weak]: {
         alert: {
           type: alertTypeEnum.ERRO,
-          message: 'Sua senha é muita fraca',
+          message:
+            'Sua senha é muito fraca! A segurança da sua senha está abaixo do recomendado.',
         },
         progress: {
           width: '25%',
@@ -40,7 +42,8 @@ function ValidateStrengthPassword({ userPassword }: { userPassword: string }) {
       [strengthPasswordSteps.medium]: {
         alert: {
           type: alertTypeEnum.WARNING,
-          message: 'Sua senha é mediana',
+          message:
+            'Sua senha é mediana! Sua senha oferece segurança básica, mas poderia ser mais robusta.',
         },
         progress: {
           width: '50%',
@@ -50,7 +53,7 @@ function ValidateStrengthPassword({ userPassword }: { userPassword: string }) {
       [strengthPasswordSteps.strong]: {
         alert: {
           type: alertTypeEnum.INFO,
-          message: 'Sua senha é forte',
+          message: 'Sua senha é forte! Sua senha oferece uma boa segurança.',
         },
         progress: {
           width: '75%',
@@ -60,7 +63,8 @@ function ValidateStrengthPassword({ userPassword }: { userPassword: string }) {
       [strengthPasswordSteps.tooStrong]: {
         alert: {
           type: alertTypeEnum.SUCCESS,
-          message: 'Sua senha é muito forte',
+          message:
+            'Sua senha é muito forte! Sua senha atinge um excelente nível de segurança.',
         },
         progress: {
           width: '100%',
@@ -91,6 +95,7 @@ function ValidateStrengthPassword({ userPassword }: { userPassword: string }) {
       />
 
       <AlertComponent
+        size="sm"
         message={getPasswordStrengthData(passwordStrength).alert.message}
         type={getPasswordStrengthData(passwordStrength).alert.type}
         outline={true}

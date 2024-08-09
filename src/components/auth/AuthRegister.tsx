@@ -13,6 +13,8 @@ import Progress from '../ui/Progress';
 import AlertComponent from '../ui/AlertComponent';
 import { alertTypeEnum } from '../../helpers/enums/alertEnum';
 import ValidateStrengthPassword from '../ValidateStrengthPassword';
+import * as styled from './style/AuthRegisterStyle';
+import { passwordCheckListData } from '../../helpers/data/passwordCheckListData';
 
 type Inputs = {
   name: string;
@@ -161,6 +163,17 @@ function AuthRegister() {
                   {password && (
                     <ValidateStrengthPassword userPassword={password} />
                   )}
+
+                  <styled.PasswordRulesList>
+                    {passwordCheckListData.map((rule: string, i: number) => {
+                      return (
+                        <li key={i}>
+                          <div />
+                          <span>{rule}</span>
+                        </li>
+                      );
+                    })}
+                  </styled.PasswordRulesList>
 
                   <div>
                     <ButtonSubmit text="Cadastrar" loading={loading} />

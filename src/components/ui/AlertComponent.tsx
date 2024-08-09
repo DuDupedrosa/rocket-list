@@ -7,17 +7,20 @@ import { fadeInLeft } from '../../style/styled-components/Animation';
 interface ContentStylesTypes {
   svgColor?: string;
   textColor?: string;
+  size: 'md' | 'sm';
 }
 
 interface ContainerStylesTypes {
   bg: string;
+  size: 'md' | 'sm';
   outline?: boolean;
 }
 
 const Container = styled.div`
   position: relative;
   width: 100%;
-  padding: 20px;
+  padding: ${({ size }: ContainerStylesTypes) =>
+    size === 'sm' ? '12px' : '20px'};
   padding-right: 32px;
   border-radius: 8px;
   background-color: ${({ bg, outline }: ContainerStylesTypes) =>
@@ -31,16 +34,19 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: 20px 1fr;
   align-items: center;
-  gap: 16px;
+  gap: ${({ size }: ContentStylesTypes) => (size === 'sm' ? '8px' : '16px')};
   svg {
     color: ${({ svgColor }: ContentStylesTypes) =>
       svgColor ? svgColor : 'var(--light)'};
-    width: 20px;
-    height: 20px;
+    width: ${({ size }: ContentStylesTypes) =>
+      size === 'sm' ? '16px' : '20px'};
+    height: ${({ size }: ContentStylesTypes) =>
+      size === 'sm' ? '16px' : '20px'};
   }
 
   p {
-    font-size: 16px;
+    font-size: ${({ size }: ContentStylesTypes) =>
+      size === 'sm' ? '14px' : '16px'};
     color: ${({ textColor }: ContentStylesTypes) =>
       textColor ? textColor : 'var(--light)'};
     font-weight: normal;
@@ -54,9 +60,11 @@ const XCloseAlertContainer = styled.div`
   right: 8px;
 
   svg {
-    width: 24px;
+    width: ${({ size }: ContentStylesTypes) =>
+      size === 'sm' ? '18px' : '24px'};
     cursor: pointer;
-    height: 24px;
+    height: ${({ size }: ContentStylesTypes) =>
+      size === 'sm' ? '18px' : '24px'};
     color: var(--light);
     transition: all;
   }
@@ -66,6 +74,7 @@ function AlertComponent({
   type,
   message,
   onClose,
+  size,
   outline,
 }: {
   type:
@@ -74,9 +83,8 @@ function AlertComponent({
     | typeof alertTypeEnum.INFO
     | typeof alertTypeEnum.WARNING;
   message: string;
+  size: 'sm' | 'md';
   outline?: boolean;
-  svgColor?: string;
-  textColor?: string;
   onClose?: () => void;
 }) {
   const [alertBg, setAlertBg] = useState<string>('');
@@ -97,8 +105,9 @@ function AlertComponent({
   }, [type]);
 
   return (
-    <Container bg={alertBg} outline={outline}>
+    <Container bg={alertBg} outline={outline} size={size}>
       <Content
+        size={size}
         svgColor={outline ? alertBg : undefined}
         textColor={outline ? alertBg : undefined}
       >
@@ -111,7 +120,7 @@ function AlertComponent({
       </Content>
 
       {onClose && (
-        <XCloseAlertContainer onClick={() => onClose()}>
+        <XCloseAlertContainer size={size} onClick={() => onClose()}>
           <XCircle size={24} />
         </XCloseAlertContainer>
       )}
