@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import TheHeader from './TheHeader';
-import AddNewTask from './AddNewTask';
+import AddNewTask from './task/AddNewTask';
 
 const HomeBox = styled.div``;
 

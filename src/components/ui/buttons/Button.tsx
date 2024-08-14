@@ -44,8 +44,7 @@ const ButtonComponent = styled.button`
       svgColor ? svgColor : 'var(--gray-100)'};
   }
 
-  :hover,
-  :focus {
+  :hover {
     box-shadow: ${({ bg }: ButtonComponentProps) =>
       bg ? `0 0 0 2px ${bg}` : '0 0 0 2px var(--mainBlue)'};
     outline: none;

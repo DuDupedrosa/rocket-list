@@ -34,6 +34,9 @@ http.interceptors.response.use(
     if (errStatus) {
       if (errStatus === errorStatusEnum.UNAUTHORIZED) {
         window.localStorage.clear();
+
+        if (window.location.pathname === '/') return;
+
         window.location.href = '/auth';
         toast.error('Não autorizado! Faça login para continuar');
       }

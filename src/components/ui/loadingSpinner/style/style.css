@@ -42,6 +42,17 @@
   animation: rotation 1s linear infinite;
 }
 
+.loader-page {
+  width: 64px;
+  height: 64px;
+  border: 3px solid #fff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);

@@ -7,7 +7,8 @@ import { Toaster } from 'sonner';
 const GlobalStyles = createGlobalStyle`  
 :root {
   --mainBlue: #1E6F9F;
-
+  --dark: #000000;
+   
   --gray-700: #0D0D0D;
   --gray-600: #1A1A1A;
   --gray-500: #262626;

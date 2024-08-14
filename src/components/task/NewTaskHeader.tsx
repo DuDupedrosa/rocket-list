@@ -55,30 +55,17 @@ const TaskFinishedText = styled.p`
 `;
 
 interface headerProps {
-  createdTask: number;
+  createdTaskCount: number;
 }
 
-// quando for colocar as tarefas concluidas
-// <TaskFinishedText>
-//Concluídas
-//<TaskCreatedFoolbackCount
-//  width="max-content"
-//  height="auto"
-//  radius="8px"
-//  padding="4px"
-//>
-// 2 de 5
-//</TaskCreatedFoolbackCount>
-//</TaskFinishedText>
-
-function NewTask({ createdTask }: headerProps) {
+function NewTask({ createdTaskCount }: headerProps) {
   return (
     <NewTasHeaderkContainer>
       <HeaderNewTask>
         <TaskCreatedFollback>
           Tarefas criadas
           <TaskCreatedFoolbackCount width="24px" height="24px" radius="8px">
-            {createdTask}
+            {createdTaskCount}
           </TaskCreatedFoolbackCount>
         </TaskCreatedFollback>
       </HeaderNewTask>
