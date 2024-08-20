@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { fadeInLeft } from '../../../style/styled-components/Animation';
+import { mediaQueries } from '../../../helpers/breakPoints';
 
 export const AddNewTaskContainer = styled.div`
   padding: 0 20px;
@@ -177,4 +178,68 @@ export const Label = styled.label`
   color: var(--gray-300);
   margin-left: 4px;
   display: flex;
+`;
+
+export const LoginCallback = styled.span`
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    span {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: underline;
+      color: var(--mainBlue);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 4px;
+      transition: 0.4s;
+      height: 44px;
+
+      :hover {
+        background-color: var(--mainBlue);
+        color: var(--light);
+      }
+    }
+  }
+`;
+
+export const TextConfirmCompleteTask = styled.div`
+  div {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    p {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray-100);
+      text-align: center;
+      max-width: 420px;
+      line-height: 1.5;
+    }
+
+    @media ${mediaQueries.md} {
+      font-size: 18px;
+    }
+  }
+`;
+
+export const TaskMaxAlertLogged = styled.div`
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 32px;
 `;

@@ -19,6 +19,7 @@ import * as style from './style/AddNewTaskStyle';
 import LoadingSpinner from '../ui/loadingSpinner';
 import PageSpinner from '../ui/PageSpinner';
 import NewTaskBoxLogged from './NewTaskBoxLogged';
+import { useNavigate } from 'react-router-dom';
 
 function addNewTask() {
   const [tasksList, setTasksList] = useState<CreateTaskType[] | []>([]);
@@ -38,6 +39,8 @@ function addNewTask() {
   const [editTaskLoading, setEditTaskLoading] = useState<boolean>(false);
   const [deleteTaskLoading, setDeleteTaskLoading] = useState<boolean>(false);
   const [addNewTaskLoading, setAddNewTaskLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [completeTaskDialog, setCompleteTaskDialog] = useState<boolean>(false);
 
   function handleEditTask(task: CreatedTask) {
     setTaskToEdit(task);
@@ -49,7 +52,11 @@ function addNewTask() {
     setDeleteDialog(true);
   }
 
-  async function handleSubmitEditTask() {
+  async function handleSubmitEditTask({
+    completeTask,
+  }: {
+    completeTask: boolean;
+  }) {
     setEditTaskLoading(true);
 
     try {
@@ -59,13 +66,19 @@ function addNewTask() {
       let payload = {
         userId,
         value,
-        status,
+        status: completeTask ? taskStatusEnum.COMPLETED : status,
         id,
       };
 
       const { data } = await http.put('/task', payload);
 
-      setEditDialog(false);
+      if (completeTask) {
+        setCompleteTaskDialog(false);
+      } else {
+        setEditDialog(false);
+      }
+
+      setTaskToEdit(null);
       await getTask({ status: status, userId: userId });
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
@@ -168,6 +181,7 @@ function addNewTask() {
   async function addNewTask() {
     if (!user) return;
     setAddNewTaskLoading(true);
+    setAlertOfLimite(false);
 
     let payload: CreateTaskType = {
       value: task,
@@ -181,9 +195,26 @@ function addNewTask() {
       await getTask({ status: taskStatusEnum.PENDING, userId: user.id });
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
+        let status: number;
+
+        if (err.response) {
+          status = err.response.status;
+
+          if (status === errorStatusEnum.BAD_REQUEST) {
+            if (err.response.data.message === 'max_limit_five_tasks') {
+              setAlertOfLimite(true);
+            }
+          }
+        }
       }
     }
     setAddNewTaskLoading(false);
+  }
+
+  async function handleChangeStatus(status: number) {
+    if (!user) return;
+
+    await getTask({ status, userId: user.id });
   }
 
   useEffect(() => {
@@ -213,6 +244,7 @@ function addNewTask() {
             value={task}
             border={true}
           />
+
           <style.FormTaskButtonSubmit
             loading={addNewTaskLoading}
             disabled={addNewTaskLoading}
@@ -230,9 +262,30 @@ function addNewTask() {
           </style.FormTaskButtonSubmit>
         </style.FormTask>
 
-        {!userLogged && <NewTaskHeader createdTaskCount={tasksList.length} />}
-        {userLogged && (
-          <NewTaskHeader createdTaskCount={tasksListLogged.length} />
+        <div>
+          {alertOfLimite && (
+            <style.TaskMaxAlertLogged>
+              <AlertComponent
+                onClose={() => setAlertOfLimite(false)}
+                size="md"
+                type={alertTypeEnum.WARNING}
+                message="Você pode ter 5 tarefas com status de pendente, finalize a tarefa para adicionar outras"
+              />
+            </style.TaskMaxAlertLogged>
+          )}
+        </div>
+
+        {!userLogged && (
+          <NewTaskHeader
+            createdTaskCount={tasksList.length}
+            onChangeStatus={() => console.log('desabilitar')}
+          />
+        )}
+        {userLogged && !addNewTaskLoading && (
+          <NewTaskHeader
+            createdTaskCount={tasksListLogged.length}
+            onChangeStatus={async (status) => await handleChangeStatus(status)}
+          />
         )}
 
         {!loading &&
@@ -271,6 +324,10 @@ function addNewTask() {
                     key={index}
                     handleEditTask={(e) => handleEditTask(e)}
                     handleDeleteTask={(e) => handleDeleteTask(e)}
+                    handleCompleteTask={(e) => {
+                      setCompleteTaskDialog(true);
+                      setTaskToEdit(e);
+                    }}
                   />
                 );
               })}
@@ -282,14 +339,15 @@ function addNewTask() {
                   size="md"
                 />
               )}
-              {alertOfLimite && userLogged && loading && (
-                <AlertComponent
-                  size="md"
-                  type={alertTypeEnum.WARNING}
-                  message="Você pode ter 5 tarefas com status de pendente, finalize a tarefa para adicionar outras"
-                />
-              )}
             </div>
+
+            {!userLogged && tasksList.length > 0 && (
+              <style.LoginCallback onClick={() => navigate('/auth')}>
+                <div>
+                  <span>Entrar / Criar conta</span>
+                </div>
+              </style.LoginCallback>
+            )}
           </style.TasksCardsContainer>
         )}
       </style.AddNewTaskContainer>
@@ -297,9 +355,10 @@ function addNewTask() {
       {/* dialogs */}
       {editDialog && taskToEdit && (
         <Dialog
+          isVisible={editDialog}
           loading={editTaskLoading}
           onClose={() => setEditDialog(false)}
-          onAction={() => handleSubmitEditTask()}
+          onAction={() => handleSubmitEditTask({ completeTask: false })}
           title="Editar"
           buttonEnDialog={{
             buttonActionText: 'Editar tarefa',
@@ -322,11 +381,40 @@ function addNewTask() {
 
       {deleteDialog && taskToDelete && (
         <DialogDelete
+          isVisible={deleteDialog}
           loading={deleteTaskLoading}
           text="Você tem certeza que deseja deletar está tarefa?"
           onAction={() => handleSubmitDeleteTask()}
           onClose={() => setDeleteDialog(false)}
         />
+      )}
+
+      {completeTaskDialog && taskToEdit && (
+        <Dialog
+          isVisible={completeTaskDialog}
+          loading={editTaskLoading}
+          onClose={() => {
+            setCompleteTaskDialog(false);
+            setTaskToEdit(null);
+          }}
+          onAction={() => {
+            handleSubmitEditTask({ completeTask: true });
+          }}
+          title="Finalizar"
+          buttonEnDialog={{
+            buttonActionText: 'Sim, finalizar',
+            buttonCloseText: 'Não, cancelar',
+          }}
+        >
+          <style.TextConfirmCompleteTask>
+            <div>
+              <p>
+                Tem certeza que deseja finalizar essa tarefa? após mudar o
+                status você não vai conseguir alterar ele.
+              </p>
+            </div>
+          </style.TextConfirmCompleteTask>
+        </Dialog>
       )}
     </div>
   );

@@ -1,4 +1,8 @@
 import styled from 'styled-components';
+import Button from '../ui/buttons/Button';
+import { useEffect, useState } from 'react';
+import { taskStatusEnum } from '../../helpers/enums/task';
+import { TaskStatusEnumType } from '../../types/task';
 
 const NewTasHeaderkContainer = styled.div`
   max-width: 700px;
@@ -54,11 +58,20 @@ const TaskFinishedText = styled.p`
   gap: 0.5rem;
 `;
 
-interface headerProps {
+const ButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+interface HeaderProps {
   createdTaskCount: number;
+  onChangeStatus: (status: number) => void;
 }
 
-function NewTask({ createdTaskCount }: headerProps) {
+function NewTask({ createdTaskCount, onChangeStatus }: HeaderProps) {
+  const [status, setStatus] = useState<number>(taskStatusEnum.PENDING);
+
   return (
     <NewTasHeaderkContainer>
       <HeaderNewTask>
@@ -68,6 +81,31 @@ function NewTask({ createdTaskCount }: headerProps) {
             {createdTaskCount}
           </TaskCreatedFoolbackCount>
         </TaskCreatedFollback>
+
+        <ButtonsContainer>
+          <Button
+            onClick={() => {
+              setStatus(taskStatusEnum.PENDING);
+              onChangeStatus(taskStatusEnum.PENDING);
+            }}
+            fontSize="14px"
+            borderColor={status === taskStatusEnum.COMPLETED ? '#1E6F9F' : ''}
+            bg={status === taskStatusEnum.COMPLETED ? 'transparent' : '#1E6F9F'}
+          >
+            Pendentes
+          </Button>
+          <Button
+            onClick={() => {
+              setStatus(taskStatusEnum.COMPLETED);
+              onChangeStatus(taskStatusEnum.COMPLETED);
+            }}
+            fontSize="14px"
+            bg={status === taskStatusEnum.PENDING ? 'transparent' : '#1E6F9F'}
+            borderColor={status === taskStatusEnum.PENDING ? '#1E6F9F' : ''}
+          >
+            Finalizadas
+          </Button>
+        </ButtonsContainer>
       </HeaderNewTask>
     </NewTasHeaderkContainer>
   );

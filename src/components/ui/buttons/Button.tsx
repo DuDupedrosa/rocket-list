@@ -12,6 +12,7 @@ interface ButtonComponentProps {
   fontWeight?: string;
   loading?: boolean;
   radius?: string;
+  borderColor?: string;
 }
 
 const ButtonComponent = styled.button`
@@ -36,6 +37,11 @@ const ButtonComponent = styled.button`
   transition: 0.3s;
   width: 100%;
   justify-content: center;
+  padding-left: 12px;
+  padding-right: 12px;
+  border: 1px solid
+    ${({ borderColor }: ButtonComponentProps) =>
+      borderColor ? borderColor : 'transparent'};
 
   svg {
     width: ${({ svgW }: ButtonComponentProps) => (svgW ? svgW : '24px')};
@@ -77,6 +83,7 @@ interface ButtonProps {
   fontSize?: string;
   fontWeight?: string;
   radius?: string;
+  borderColor?: string;
 }
 function Button({
   loading,
@@ -92,6 +99,7 @@ function Button({
   fontSize,
   fontWeight,
   radius,
+  borderColor,
 }: ButtonProps) {
   return (
     <ButtonComponent
@@ -107,6 +115,7 @@ function Button({
       type="submit"
       disabled={loading || disabled}
       loading={loading}
+      borderColor={borderColor}
       onClick={() => {
         if (onClick) onClick();
       }}

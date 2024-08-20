@@ -1,10 +1,12 @@
 import { X, XCircle } from 'phosphor-react';
 import styled from 'styled-components';
 import LoadingSpinner from './loadingSpinner';
+import { mediaQueries } from '../../helpers/breakPoints';
+import { useEffect } from 'react';
 
 const DialogContainer = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
   position: absolute;
   top: 0;
   display: grid;
@@ -14,7 +16,9 @@ const DialogContainer = styled.div`
 
 const DialogCard = styled.div`
   padding: 24px;
-  min-width: 520px;
+  margin-left: 20px;
+  margin-right: 20px;
+  min-width: 320px;
   min-height: 320px;
   background-color: var(--gray-600);
   border: 1px solid var(--gray-300);
@@ -23,6 +27,14 @@ const DialogCard = styled.div`
   z-index: 9999999999px;
   display: flex;
   flex-direction: column;
+
+  @media ${mediaQueries.md} {
+    min-width: 520px;
+  }
+
+  @media ${mediaQueries.sm} {
+    min-width: 384px;
+  }
 `;
 
 const Header = styled.div`
@@ -35,9 +47,13 @@ const Header = styled.div`
   margin-bottom: 32px;
 
   h4 {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--gray-100);
+
+    @media ${mediaQueries.md} {
+      font-size: 24px;
+    }
   }
 
   svg {
@@ -64,7 +80,7 @@ const ButtonActionContainer = styled.div`
 
 const ButtonAction = styled.button`
   border-radius: 8px;
-  height: 44px;
+  height: 38px;
   color: var(--gray-100);
   font-size: 16px;
   font-weight: normal;
@@ -96,6 +112,11 @@ const ButtonAction = styled.button`
         outline ? 'transparent' : 'var(--mainBlue)'};
     }
   }
+
+  @media ${mediaQueries.md} {
+    font-size: 16px;
+    height: 44px;
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -113,11 +134,13 @@ function Dialog({
   children,
   loading,
   buttonEnDialog,
+  isVisible,
   onClose,
   onAction,
 }: {
   title: string;
   children: React.ReactNode;
+  isVisible: boolean;
   onClose?: () => void;
   onAction?: () => void;
   buttonEnDialog?: {
@@ -126,6 +149,21 @@ function Dialog({
   };
   loading?: boolean;
 }) {
+  useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = 'hidden';
+      window.scrollTo(0, 0);
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isVisible]);
+
+  if (!isVisible) return null;
+
   return (
     <DialogContainer>
       <DialogCard>

@@ -14,3 +14,8 @@ export type CreatedTask = {
   updateAt: string;
   updateBy: string;
 };
+
+export type TaskStatusEnumType = {
+  PENDING: 1;
+  COMPLETED: 2;
+};

@@ -32,9 +32,7 @@ function NewTaskBox({ task }: TaskProps) {
         />
       )}
 
-      <taskBoxStyled.NewTaskContent check={checkFinish}>
-        {task.value}
-      </taskBoxStyled.NewTaskContent>
+      <taskBoxStyled.NewTaskContent>{task.value}</taskBoxStyled.NewTaskContent>
 
       <taskBoxStyled.ActionsButtonsContainer>
         <taskBoxStyled.Buttons

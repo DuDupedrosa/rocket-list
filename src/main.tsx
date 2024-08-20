@@ -58,6 +58,7 @@ a {
 text-decoration: none;
 display: inline-block;
 }
+
 `;
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

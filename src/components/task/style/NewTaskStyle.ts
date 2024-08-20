@@ -25,26 +25,34 @@ export const NewTaskContent = styled.p`
   font-size: 0.875rem;
   line-height: 1.4;
   color: #f2f2f2;
-  text-decoration: ${(p: TaskFinish) => (p.check ? 'line-through' : 'none')};
 `;
 
+interface ButtonsProps {
+  svg: 'delete' | 'edit';
+  disabled?: boolean;
+}
 export const Buttons = styled.div`
   div {
     svg {
       width: 20px;
       height: 20px;
-      cursor: pointer;
-      color: ${({ svg }: { svg: 'delete' | 'edit' }) =>
+      cursor: ${({ disabled }: ButtonsProps) =>
+        disabled ? 'not-allowed' : 'pointer'};
+      color: ${({ svg }: ButtonsProps) =>
         svg === 'delete' ? 'var(--red-400)' : 'var(--mainBlue)'};
+      opacity: ${({ disabled }: ButtonsProps) => (disabled ? 0.2 : 1)};
     }
 
     padding: 2px;
     border-radius: 4px;
     transition: 0.3s;
     border: 1px solid transparent;
-    cursor: pointer;
+    cursor: ${({ disabled }: ButtonsProps) =>
+      disabled ? 'not-allowed' : 'pointer'};
+
     :hover {
-      border-color: var(--gray-300);
+      border-color: ${({ disabled }: ButtonsProps) =>
+        disabled ? 'transparent' : 'var(--gray-300)'};
     }
   }
 `;
@@ -53,4 +61,24 @@ export const ActionsButtonsContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+`;
+
+interface ButtonCompleteTaskProps {
+  disabled?: boolean;
+}
+export const ButtonCompleteTask = styled.div`
+  svg {
+    width: 20px;
+    height: 20px;
+    cursor: ${({ disabled }: ButtonCompleteTaskProps) =>
+      disabled ? 'not-allowed' : 'pointer'};
+    color: var(--mainBlue);
+    transition: 0.3s;
+    opacity: ${({ disabled }: ButtonCompleteTaskProps) => (disabled ? 0.2 : 1)};
+
+    :hover {
+      color: ${({ disabled }: ButtonCompleteTaskProps) =>
+        disabled ? 'var(--mainBlue)' : 'var(--green-600)'};
+    }
+  }
 `;
