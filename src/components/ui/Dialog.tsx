@@ -27,6 +27,9 @@ const DialogCard = styled.div`
   z-index: 9999999999px;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 0.3s ease-in-out forwards;
 
   @media ${mediaQueries.md} {
     min-width: 520px;
@@ -34,6 +37,13 @@ const DialogCard = styled.div`
 
   @media ${mediaQueries.sm} {
     min-width: 384px;
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 

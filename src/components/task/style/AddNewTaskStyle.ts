@@ -3,7 +3,7 @@ import { fadeInLeft } from '../../../style/styled-components/Animation';
 import { mediaQueries } from '../../../helpers/breakPoints';
 
 export const AddNewTaskContainer = styled.div`
-  padding: 0 20px;
+  padding: 0px 32px 32px 32px;
   width: 100%;
 `;
 

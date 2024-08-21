@@ -38,7 +38,7 @@ function NewTaskBox({ task }: TaskProps) {
         <taskBoxStyled.Buttons
           onClick={() => {
             toast.info(
-              'Para editar uma tarefa você precisa estar logado na plataforma'
+              'Para editar/deletar uma tarefa você precisa estar logado na plataforma'
             );
           }}
           svg="edit"

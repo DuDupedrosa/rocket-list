@@ -20,12 +20,14 @@ import LoadingSpinner from '../ui/loadingSpinner';
 import PageSpinner from '../ui/PageSpinner';
 import NewTaskBoxLogged from './NewTaskBoxLogged';
 import { useNavigate } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
 
 function addNewTask() {
   const [tasksList, setTasksList] = useState<CreateTaskType[] | []>([]);
   const [tasksListLogged, setTasksListLogged] = useState<CreatedTask[] | []>(
     []
   );
+  const [taskStatus, setTaskStatus] = useState<number>(taskStatusEnum.PENDING);
   const [task, setTask] = useState('');
   const [createdTask, setCreatedTask] = useState(0);
   const [alertOfLimite, setAlertOfLimite] = useState<boolean>(false);
@@ -41,6 +43,18 @@ function addNewTask() {
   const [addNewTaskLoading, setAddNewTaskLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [completeTaskDialog, setCompleteTaskDialog] = useState<boolean>(false);
+  const [pageCount, setPageCount] = useState<number>(0);
+  const [meta, setMeta] = useState<{
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    itemsPerPage: number;
+  }>({
+    totalItems: 0,
+    totalPages: 0,
+    currentPage: 1,
+    itemsPerPage: 5,
+  });
 
   function handleEditTask(task: CreatedTask) {
     setTaskToEdit(task);
@@ -98,7 +112,11 @@ function addNewTask() {
       const { data } = await http.delete(`/task/${id}/${userId}`);
 
       setDeleteDialog(false);
-      await getTask({ status: status, userId: userId });
+      await getTask({
+        status: status,
+        userId: userId,
+        page: status === taskStatusEnum.COMPLETED ? meta.currentPage : 0,
+      });
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
       }
@@ -119,7 +137,7 @@ function addNewTask() {
         // quando não está logado, só pode adicionar 2 tasks
         if (tasksList.length === 2) {
           toast.warning(
-            'O limite máximo de task para um usuário deslogado é 2'
+            'Como usuário deslogado, você pode ter até 2 tarefas pendentes. Faça login ou cadastre-se na plataforma para criar mais tarefas.'
           );
           return;
         }
@@ -147,19 +165,34 @@ function addNewTask() {
   async function getTask({
     status,
     userId,
+    page,
+    limit,
   }: {
     status: number;
     userId: string | null;
+    page?: number;
+    limit?: number;
   }) {
     setLoading(true);
 
     try {
       const { data } = await http.get(
-        `task/${userId ? userId : '0'}?status=${status}`
+        `task/${userId ? userId : '0'}?status=${status}&page=${
+          page ? page : 1
+        }&limit=${limit ? limit : meta.itemsPerPage}`
       );
 
-      setTasksListLogged(data.content);
+      const { items, currentPage, totalItems, totalPages } = data.content;
+
+      setTaskStatus(status);
+      setTasksListLogged(items);
       setUserLogged(true);
+      setMeta({
+        totalItems,
+        totalPages,
+        currentPage,
+        itemsPerPage: 5,
+      });
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
         let status: number;
@@ -217,6 +250,16 @@ function addNewTask() {
     await getTask({ status, userId: user.id });
   }
 
+  async function handlePageClick(page: number) {
+    if (!user || !user.id) return;
+
+    await getTask({
+      userId: user.id,
+      status: taskStatusEnum.COMPLETED,
+      page: page + 1,
+    });
+  }
+
   useEffect(() => {
     const userLocal = localStorage.getItem('user');
 
@@ -235,7 +278,7 @@ function addNewTask() {
         <style.FormTask onSubmit={handleNewTask}>
           <style.FormTaskInputText
             data-test="AddNewTask:InputCreateTask"
-            placeholder="Adicione uma nova tarefa"
+            placeholder="Adicionar tarefa"
             type="text"
             required
             name="tasksList"
@@ -269,7 +312,7 @@ function addNewTask() {
                 onClose={() => setAlertOfLimite(false)}
                 size="md"
                 type={alertTypeEnum.WARNING}
-                message="Você pode ter 5 tarefas com status de pendente, finalize a tarefa para adicionar outras"
+                message="Você pode ter até 5 tarefas pendentes. Finalize uma tarefa para poder adicionar novas."
               />
             </style.TaskMaxAlertLogged>
           )}
@@ -283,28 +326,47 @@ function addNewTask() {
         )}
         {userLogged && !addNewTaskLoading && (
           <NewTaskHeader
-            createdTaskCount={tasksListLogged.length}
-            onChangeStatus={async (status) => await handleChangeStatus(status)}
+            createdTaskCount={meta.totalItems}
+            onChangeStatus={async (status) => {
+              setTaskStatus(status);
+              await handleChangeStatus(status);
+            }}
           />
         )}
 
-        {!loading &&
-          ((userLogged && tasksListLogged.length === 0) ||
-            (!userLogged && tasksList.length === 0)) && (
-            <style.NotHaveTaskBox>
-              <style.NotHaveTaskImgBox>
-                <img src={NotHaveTaskImg} />
-              </style.NotHaveTaskImgBox>
-              <style.NotHaveTaskContent>
-                <style.NotHaveTaskText isBold={true}>
-                  Você ainda não tem tarefas cadastradas
-                </style.NotHaveTaskText>
-                <style.NotHaveTaskText isBold={false}>
-                  Crie tarefas e organize seus itens a fazer
-                </style.NotHaveTaskText>
-              </style.NotHaveTaskContent>
-            </style.NotHaveTaskBox>
-          )}
+        {!loading && userLogged && tasksListLogged.length === 0 && (
+          <style.NotHaveTaskBox>
+            <style.NotHaveTaskImgBox>
+              <img src={NotHaveTaskImg} />
+            </style.NotHaveTaskImgBox>
+            <style.NotHaveTaskContent>
+              <style.NotHaveTaskText isBold={true}>
+                {taskStatus === taskStatusEnum.PENDING
+                  ? 'Nenhuma tarefa pendente cadastrada.'
+                  : 'Nenhuma tarefa finalizada pendente cadastrada.'}
+              </style.NotHaveTaskText>
+
+              <style.NotHaveTaskText isBold={false}>
+                Crie tarefas e organize suas atividades.
+              </style.NotHaveTaskText>
+            </style.NotHaveTaskContent>
+          </style.NotHaveTaskBox>
+        )}
+        {!loading && !userLogged && tasksList.length === 0 && (
+          <style.NotHaveTaskBox>
+            <style.NotHaveTaskImgBox>
+              <img src={NotHaveTaskImg} />
+            </style.NotHaveTaskImgBox>
+            <style.NotHaveTaskContent>
+              <style.NotHaveTaskText isBold={true}>
+                Nenhuma tarefa cadastrada até o momento.
+              </style.NotHaveTaskText>
+              <style.NotHaveTaskText isBold={false}>
+                Crie tarefas e organize suas atividades.
+              </style.NotHaveTaskText>
+            </style.NotHaveTaskContent>
+          </style.NotHaveTaskBox>
+        )}
 
         {loading && <PageSpinner />}
 
@@ -335,7 +397,7 @@ function addNewTask() {
               {tasksList.length > 0 && !userLogged && !loading && (
                 <AlertComponent
                   type={alertTypeEnum.WARNING}
-                  message="Faça o login/registro em nossa plataforma, para não perder seu progresso."
+                  message="Faça login ou registre-se em nossa plataforma para salvar seu progresso."
                   size="md"
                 />
               )}
@@ -349,6 +411,28 @@ function addNewTask() {
               </style.LoginCallback>
             )}
           </style.TasksCardsContainer>
+        )}
+
+        {taskStatus === taskStatusEnum.COMPLETED && (
+          <div
+            className={`pagination-container`}
+            style={{
+              pointerEvents: loading ? 'none' : 'inherit',
+              opacity: loading ? 0 : 1,
+            }}
+          >
+            <ReactPaginate
+              nextLabel=">"
+              onPageChange={(e) => handlePageClick(e.selected)}
+              pageCount={Math.ceil(meta.totalItems / meta.itemsPerPage)}
+              previousLabel="<"
+              containerClassName={'pagination'}
+              activeClassName={'active'}
+              breakClassName={'break-me'}
+              pageRangeDisplayed={1}
+              marginPagesDisplayed={1}
+            />
+          </div>
         )}
       </style.AddNewTaskContainer>
 
@@ -368,7 +452,6 @@ function addNewTask() {
           <style.Label>Tarefa:</style.Label>
 
           <style.FormTaskInputText
-            type="text"
             value={taskToEdit.value}
             onChange={(e) => {
               let payload: CreatedTask = { ...taskToEdit };
@@ -383,7 +466,7 @@ function addNewTask() {
         <DialogDelete
           isVisible={deleteDialog}
           loading={deleteTaskLoading}
-          text="Você tem certeza que deseja deletar está tarefa?"
+          text="Tem certeza de que deseja excluir esta tarefa?"
           onAction={() => handleSubmitDeleteTask()}
           onClose={() => setDeleteDialog(false)}
         />
@@ -409,8 +492,8 @@ function addNewTask() {
           <style.TextConfirmCompleteTask>
             <div>
               <p>
-                Tem certeza que deseja finalizar essa tarefa? após mudar o
-                status você não vai conseguir alterar ele.
+                Tem certeza de que deseja finalizar esta tarefa? Após mudar o
+                status, não será possível alterá-lo.
               </p>
             </div>
           </style.TextConfirmCompleteTask>

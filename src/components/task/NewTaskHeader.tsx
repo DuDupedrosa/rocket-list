@@ -76,7 +76,7 @@ function NewTask({ createdTaskCount, onChangeStatus }: HeaderProps) {
     <NewTasHeaderkContainer>
       <HeaderNewTask>
         <TaskCreatedFollback>
-          Tarefas criadas
+          Total:
           <TaskCreatedFoolbackCount width="24px" height="24px" radius="8px">
             {createdTaskCount}
           </TaskCreatedFoolbackCount>
