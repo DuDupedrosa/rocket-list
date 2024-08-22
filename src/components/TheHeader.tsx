@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Logo from '../assets/Logo.svg';
 
 const HeaderBg = styled.header`
   background: var(--gray-700);
@@ -9,13 +8,7 @@ const HeaderBg = styled.header`
 `;
 
 function TheHeader() {
-  return (
-    <HeaderBg>
-      <a href="/">
-        <img src={Logo} alt="logo" />
-      </a>
-    </HeaderBg>
-  );
+  return <HeaderBg></HeaderBg>;
 }
 
 export default TheHeader;

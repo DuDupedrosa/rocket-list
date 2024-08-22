@@ -445,8 +445,8 @@ function addNewTask() {
           onAction={() => handleSubmitEditTask({ completeTask: false })}
           title="Editar"
           buttonEnDialog={{
-            buttonActionText: 'Editar tarefa',
-            buttonCloseText: 'Cancelar',
+            buttonActionText: 'Sim, editar',
+            buttonCloseText: 'Não, cancelar',
           }}
         >
           <style.Label>Tarefa:</style.Label>
