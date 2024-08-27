@@ -1,4 +1,4 @@
-import { List, SignOut, User, X } from 'phosphor-react';
+import { House, List, SignOut, User, X } from 'phosphor-react';
 import styled from 'styled-components';
 import Logo from '../../assets/Logo.svg';
 import { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import http from '../../api/http';
 import { useNavigate } from 'react-router-dom';
 import { fadeIn, fadeInDown } from '../../style/styled-components/Animation';
 import * as style from './style/HeaderWithMenuStyle';
+import Button from '../ui/buttons/Button';
 
 function HeaderWithMenu() {
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
@@ -58,6 +59,12 @@ function HeaderWithMenu() {
 
           {openDropdown && (
             <ul>
+              <li onClick={() => navigate('/')}>
+                <button>
+                  <House size={24} />
+                  <span>Home</span>
+                </button>
+              </li>
               <li onClick={() => navigate('/profile')}>
                 <button>
                   <User size={24} />
@@ -73,6 +80,12 @@ function HeaderWithMenu() {
             </ul>
           )}
         </style.ButtonMenuContainer>
+      )}
+
+      {!showMenu && (
+        <style.ButtonToLoginContainer onClick={() => navigate('/auth')}>
+          <Button>Login / Cadastro</Button>
+        </style.ButtonToLoginContainer>
       )}
     </style.Container>
   );

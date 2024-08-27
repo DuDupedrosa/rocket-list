@@ -4,6 +4,7 @@ import AuthPage from './pages/AuthPage';
 import AuthRegisterPage from './pages/AuthRegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
 import AuthResetPasswordPage from './pages/AuthResetPassword';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           path="/auth/reset-password"
           element={<AuthResetPasswordPage />}
         />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

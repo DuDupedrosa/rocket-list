@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { fadeIn, fadeInDown } from '../../../style/styled-components/Animation';
+import { mediaQueries } from '../../../helpers/breakPoints';
 
 export const Container = styled.div`
   background-color: var(--gray-700);
@@ -39,10 +40,11 @@ export const ButtonMenuContainer = styled.div`
   }
 
   ul {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     border-radius: 8px;
     background-color: var(--gray-500);
+    border: 1px solid var(--gray-300);
     min-width: 160px;
     padding-left: 12px;
     padding-right: 12px;
@@ -101,4 +103,8 @@ export const LogoContainer = styled.div`
     display: block;
     cursor: pointer;
   }
+`;
+
+export const ButtonToLoginContainer = styled.div`
+  width: 160px;
 `;
