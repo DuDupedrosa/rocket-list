@@ -63,3 +63,7 @@ export const ChangePasswordWarningText = styled.p`
     }
   }
 `;
+
+export const AlertEditContainer = styled.div`
+  margin-top: 20px;
+`;
