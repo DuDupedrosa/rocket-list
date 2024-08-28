@@ -343,7 +343,7 @@ function addNewTask() {
               <style.NotHaveTaskText isBold={true}>
                 {taskStatus === taskStatusEnum.PENDING
                   ? 'Nenhuma tarefa pendente cadastrada.'
-                  : 'Nenhuma tarefa finalizada pendente cadastrada.'}
+                  : 'Nenhuma tarefa finalizada cadastrada.'}
               </style.NotHaveTaskText>
 
               <style.NotHaveTaskText isBold={false}>

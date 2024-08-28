@@ -12,8 +12,10 @@ function HeaderWithMenu() {
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function validToken() {
+    setLoading(true);
     try {
       const { data } = await http.get('validate-token');
 
@@ -23,6 +25,7 @@ function HeaderWithMenu() {
     } catch (err) {
       setShowMenu(false);
     }
+    setLoading(false);
   }
 
   function handleSignOut() {
@@ -46,7 +49,7 @@ function HeaderWithMenu() {
         </span>
       </style.LogoContainer>
 
-      {showMenu && (
+      {showMenu && !loading && (
         <style.ButtonMenuContainer>
           <button onClick={() => setOpenDropdown(!openDropdown)}>
             <style.IconWrapper isVisible={openDropdown}>
@@ -82,7 +85,7 @@ function HeaderWithMenu() {
         </style.ButtonMenuContainer>
       )}
 
-      {!showMenu && (
+      {!showMenu && !loading && (
         <style.ButtonToLoginContainer onClick={() => navigate('/auth')}>
           <Button>Login / Cadastro</Button>
         </style.ButtonToLoginContainer>
