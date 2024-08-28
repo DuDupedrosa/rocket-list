@@ -220,7 +220,7 @@ function Profile() {
             <p>
               Se você deseja alterar sua senha, clique no link abaixo para ser
               redirecionado à página de troca de senha:{' '}
-              <span onClick={() => navigate('/changePassword')}>
+              <span onClick={() => navigate('/profile/change-password')}>
                 Alterar senha
               </span>
             </p>

@@ -22,6 +22,7 @@ import { AxiosError } from 'axios';
 import http from '../../api/http';
 import { errorStatusEnum } from '../../helpers/enums/errorStatusEnum';
 import { alertDataType } from '../../types/alert';
+import PasswordRulesCheckList from '../PasswordRulesCheckList';
 
 type Inputs = {
   name: string;
@@ -235,16 +236,7 @@ function AuthRegister() {
                     <ValidateStrengthPassword userPassword={password} />
                   )}
 
-                  <styled.PasswordRulesList>
-                    {passwordCheckListData.map((rule: string, i: number) => {
-                      return (
-                        <li key={i}>
-                          <div />
-                          <span>{rule}</span>
-                        </li>
-                      );
-                    })}
-                  </styled.PasswordRulesList>
+                  <PasswordRulesCheckList />
 
                   {alert && alert.show && (
                     <AlertComponent
