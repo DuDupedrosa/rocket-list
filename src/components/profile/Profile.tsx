@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { InputForm, Label } from '../../style/styled-components/Form';
-import { Button } from '../ui/buttons/ButtonSubmit';
 import * as style from './style/ProfileStyle';
 import DeleteAccount from './ProfileDeleteAccount';
 import http from '../../api/http';
@@ -14,6 +13,7 @@ import { alertTypeEnum } from '../../helpers/enums/alertEnum';
 import PageSpinner from '../ui/PageSpinner';
 import { AxiosError } from 'axios';
 import { errorStatusEnum } from '../../helpers/enums/errorStatusEnum';
+import Button from '../ui/buttons/Button';
 
 type Inputs = {
   email: string;

@@ -36,6 +36,7 @@ export const BasicInfoContainer = styled.div`
 `;
 
 export const ButtonSubmitContainer = styled.div`
+  margin-top: 32px;
   width: 160px;
 `;
 
