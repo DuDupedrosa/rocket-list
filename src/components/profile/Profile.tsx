@@ -128,108 +128,110 @@ function Profile() {
   }, [userLocal]);
 
   return (
-    <style.Container>
-      <style.Title>Editar perfil</style.Title>
+    <div>
+      <style.Container>
+        <style.Title>Editar perfil</style.Title>
 
-      <style.BasicInfoContainer>
-        <style.SectionTitle>Informações básicas:</style.SectionTitle>
+        <style.BasicInfoContainer>
+          <style.SectionTitle>Informações básicas:</style.SectionTitle>
 
-        {getProfileLoading ? (
-          <PageSpinner />
-        ) : (
-          <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="form-container">
-                <div>
-                  <Label htmlFor="name">Nome *</Label>
-                  <InputForm
-                    id="name"
-                    placeholder="nome"
-                    {...register('name', { required: true })}
-                  />
-                  {errors.name && <RequiredInputMessage />}
+          {getProfileLoading ? (
+            <PageSpinner />
+          ) : (
+            <div>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="form-container">
+                  <div>
+                    <Label htmlFor="name">Nome *</Label>
+                    <InputForm
+                      id="name"
+                      placeholder="nome"
+                      {...register('name', { required: true })}
+                    />
+                    {errors.name && <RequiredInputMessage />}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="lastName">Sobrenome</Label>
+                    <InputForm
+                      id="lastName"
+                      placeholder="sobrenome"
+                      {...register('lastName')}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email">Email *</Label>
+                    <InputForm
+                      id="email"
+                      type="email"
+                      placeholder="email"
+                      {...register('email', {
+                        required: true,
+                        onChange: (e) => {
+                          handleChangeEmail(e);
+                        },
+                        onBlur: (e) => {
+                          handleBlurEmail(e);
+                        },
+                      })}
+                    />
+                    {errors.email && <RequiredInputMessage />}
+                    {!isValidEmail && (
+                      <RequiredInputMessage customMessage="Formato de e-mail inválido" />
+                    )}
+                  </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="lastName">Sobrenome</Label>
-                  <InputForm
-                    id="lastName"
-                    placeholder="sobrenome"
-                    {...register('lastName')}
-                  />
-                </div>
+                {showAlertSuccessEdit && (
+                  <style.AlertEditContainer>
+                    <AlertComponent
+                      size="md"
+                      type={alertTypeEnum.SUCCESS}
+                      message="Suas informações foram salvas com sucesso"
+                      onClose={() => setShowAlertSuccessEdit(false)}
+                    />
+                  </style.AlertEditContainer>
+                )}
+                {showEditAlertError && (
+                  <style.AlertEditContainer>
+                    <AlertComponent
+                      size="md"
+                      type={alertTypeEnum.ERRO}
+                      message="O sobrenome já foi salvo anteriormente. Ele não pode ser removido ou deixado em branco. Por favor, insira um sobrenome válido."
+                      onClose={() => setShowEditAlertError(false)}
+                    />
+                  </style.AlertEditContainer>
+                )}
 
-                <div>
-                  <Label htmlFor="email">Email *</Label>
-                  <InputForm
-                    id="email"
-                    type="email"
-                    placeholder="email"
-                    {...register('email', {
-                      required: true,
-                      onChange: (e) => {
-                        handleChangeEmail(e);
-                      },
-                      onBlur: (e) => {
-                        handleBlurEmail(e);
-                      },
-                    })}
-                  />
-                  {errors.email && <RequiredInputMessage />}
-                  {!isValidEmail && (
-                    <RequiredInputMessage customMessage="Formato de e-mail inválido" />
-                  )}
-                </div>
-              </div>
+                <style.ButtonSubmitContainer>
+                  <Button loading={editProfileLoading}>Editar</Button>
+                </style.ButtonSubmitContainer>
+              </form>
+            </div>
+          )}
+        </style.BasicInfoContainer>
 
-              {showAlertSuccessEdit && (
-                <style.AlertEditContainer>
-                  <AlertComponent
-                    size="md"
-                    type={alertTypeEnum.SUCCESS}
-                    message="Suas informações foram salvas com sucesso"
-                    onClose={() => setShowAlertSuccessEdit(false)}
-                  />
-                </style.AlertEditContainer>
-              )}
-              {showEditAlertError && (
-                <style.AlertEditContainer>
-                  <AlertComponent
-                    size="md"
-                    type={alertTypeEnum.ERRO}
-                    message="O sobrenome já foi salvo anteriormente. Ele não pode ser removido ou deixado em branco. Por favor, insira um sobrenome válido."
-                    onClose={() => setShowEditAlertError(false)}
-                  />
-                </style.AlertEditContainer>
-              )}
+        <style.Divider />
 
-              <style.ButtonSubmitContainer>
-                <Button loading={editProfileLoading}>Editar</Button>
-              </style.ButtonSubmitContainer>
-            </form>
-          </div>
-        )}
-      </style.BasicInfoContainer>
+        <div>
+          <style.SectionTitle>Alterar senha:</style.SectionTitle>
+          <style.ChangePasswordWarningText>
+            <p>
+              Se você deseja alterar sua senha, clique no link abaixo para ser
+              redirecionado à página de troca de senha:{' '}
+              <span onClick={() => navigate('/changePassword')}>
+                Alterar senha
+              </span>
+            </p>
+          </style.ChangePasswordWarningText>
+        </div>
 
-      <style.Divider />
-
-      <div>
-        <style.SectionTitle>Alterar senha:</style.SectionTitle>
-        <style.ChangePasswordWarningText>
-          <p>
-            Se você deseja alterar sua senha, clique no link abaixo para ser
-            redirecionado à página de troca de senha:{' '}
-            <span onClick={() => navigate('/changePassword')}>
-              Alterar senha
-            </span>
-          </p>
-        </style.ChangePasswordWarningText>
-      </div>
-
-      <style.Divider />
+        <style.Divider />
+      </style.Container>
 
       <DeleteAccount />
-    </style.Container>
+    </div>
   );
 }
 
